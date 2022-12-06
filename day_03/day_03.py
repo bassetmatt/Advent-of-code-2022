@@ -1,7 +1,7 @@
 getRef = lambda c: ord('a') if c.islower() else ord('A') - 26
 priorities = [0, 0]
 
-with open('input','r') as f:
+with open('input') as f:
     L = f.read().split('\n')[:-1]
 
 for idx, sack in enumerate(L) :
