@@ -1,6 +1,5 @@
 import re
-dirs, CURRENT_PATH = {}, []
-isCommand, pathToString = lambda x : x[0] == '$', lambda x : "/".join(x)[1:]
+dirs, CURRENT_PATH, pathToString = {}, [], lambda x : "/" + "/".join(x[1:])
 class Directory:
     def __init__(self,path:str) -> None:
         self.path, self.size, self.children = path, 0, []
@@ -22,7 +21,7 @@ with open('input') as f:
                 dirs[pathToString(CURRENT_PATH)].children.append(pathToString(path))
             else :
                 dirs[pathToString(CURRENT_PATH)].size += int(re.search("(\d+) .+",line).groups()[0])
-used = dirs[''].getSubSize()
+used = dirs['/'].getSubSize()
 dirs_okay = sorted([d for d in dirs.values() if d.size > used - 40000000],key=lambda x: x.size)
 print(f"Size of files less than 100000 : {sum([ d.size for d in dirs.values() if d.size <= 100000])}")
 print(f"Size of the smallest dir to delete : {dirs_okay[0].size}")
