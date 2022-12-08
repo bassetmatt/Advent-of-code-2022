@@ -11,4 +11,4 @@ with open('input') as f:
                 s += x <= A[i,j]
                 if x == A[i,j]: break
             S[i,j] *= s
-print(f"Visible Count : {np.sum(B)}\nBest scenic score : {np.max(S)}")
+print(f"Visible Count : {np.count_nonzero(B)}\nBest scenic score : {np.max(S)}")
