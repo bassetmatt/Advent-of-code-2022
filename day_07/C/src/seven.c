@@ -60,13 +60,16 @@ int main(int argc, char const *argv[])
     readDirectory(p_file,root, dirList, &dirCount);
     fclose(p_file);
   
-    int tot_size = 0;
+    int tot_size = 0, this_size;
+    int extra = root->size - 40000000;
+    int minSize = __INT32_MAX__;
+
     for (int i = 0; i < dirCount; i++) {
-        if (dirList[i]->size <= SIZE_THRESHOLD) {
-            tot_size += dirList[i]->size;
-        }
+        tot_size += (this_size = dirList[i]->size) <= SIZE_THRESHOLD ? this_size : 0;
+        minSize = (this_size >= extra && this_size < minSize) ? this_size : minSize;
     }
     printf("Total size : %d\n",tot_size);
+    printf("Min Size : %d\n",minSize);
     return 0;
 }
 

@@ -2,7 +2,6 @@ add_executable(
     seven seven.c
 )
 
-
 set_target_properties(
     seven
     PROPERTIES 
