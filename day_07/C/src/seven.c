@@ -48,6 +48,10 @@ int main(int argc, char const *argv[])
 {
     // Input file
     FILE* p_file = fopen("../data/input", "r");
+    if (p_file == NULL) {
+        printf("File not found, please be sure to be in bin directory\n");
+        exit(1);
+    }
     // Line buffer
     char line[LINE_SIZE];
     directory** dirList = malloc(DIR_NUMBER*sizeof(directory*));
