@@ -30,8 +30,7 @@ int readDirectory(FILE* p_file, directory* p_dir, directory** dirList, int* p_di
             dir->n_children = 0;
             // Makes a larger list
             p_dir->children = realloc(p_dir->children, (p_dir->n_children + 1)*sizeof(directory*));
-            (p_dir->children)[p_dir->n_children] = dir;
-            p_dir->n_children++;
+            (p_dir->children)[p_dir->n_children++] = dir;
         }
         if (sscanf(line,"$ cd %s",dirname)) {
             if (strcmp(dirname,"..") == 0) {
