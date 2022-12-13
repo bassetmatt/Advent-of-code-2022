@@ -12,7 +12,7 @@ Advent of code event 2022
 - [x] Day  8 : Done (python, 14 lines) 
 - [x] Day  9 : Done (python, 13 lines) + OC
 - [x] Day 10 : Done (python, 12 lines) + OC
-- [x] Day 11 : Done (python, 30 lines) + OC
+- [x] Day 11 : Done (python, 28 lines) + OC
 - [ ] Day 12 : Not available
 - [ ] Day 13 : Not available
 - [ ] Day 14 : Not available
