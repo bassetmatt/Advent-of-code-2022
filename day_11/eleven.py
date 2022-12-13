@@ -1,78 +1,30 @@
-import re
-import numpy as np
-import itertools
 import math
+isOld = lambda x,s : x if 'old' in s else int(s) 
 def parseOperation(op:str) :
-    if '+' in op :
-        symb = ' + '
-    else :
-        symb = ' * '
-    op = op.split(symb)
-    for i in range(len(op)) :
-        if 'old' in op[i] :
-            op[i] = 'o'
-        else :
-            op[i] = int(op[i])
-    
-    return op[0], symb[1], op[1]
-
+    symb = '+' if '+' in op else '*'
+    l,r = op.split(symb)[0], op.split(symb)[1]
+    return (lambda x: isOld(x,l) + isOld(x,r)) if symb == '+' else (lambda x: isOld(x,l) * isOld(x,r))
 class Monke :
     def __init__(self, s:str) -> None:
         self.id = int(s[0][7])
-        self.list = list(map(int,s[1][18:].split(', ')))
-
+        self.list1 = list(map(int,s[1][18:].split(', ')))
+        self.list2 = list(self.list1)
         self.op = parseOperation(s[2][19:])
-        self.test = int(s[3][21:])
-        self.true = int(s[4][-1])
-        self.false = int(s[5][-1])
-        self.look = 0
-    
-    def applyOperation(self,old) :
-        left  = old if self.op[0] == 'o' else self.op[0]
-        right = old if self.op[2] == 'o' else self.op[2]
-        if self.op[1] == '+' :
-            return left+right
-        else :
-            return left*right
-        
-    def __str__(self) -> str:
-        return f"Monke {self.id}\n" + \
-               f"Items {self.list}\n" + \
-               f"Operation {self.op}\n" + \
-               f"Test {self.test}\n" + \
-               f"True {self.true}, False {self.false}\n"
-
-def printRound(m:Monke) :
-    return f"Monke {m.id}\n" + \
-            f"Items {m.list}\n"
-    
+        self.mod = int(s[3][21:])
+        self.test = lambda x: int(s[4][-1]) if x%self.mod == 0 else int(s[5][-1])
+        self.look = [0,0]
 with open('input') as f:
-    X = f.read().split('\n\n')
-    iteration = 0
-    monkeList:list[Monke] = []
-    for x in X:
-        m = Monke(x.split('\n'))
-        monkeList.append(m)
-    value = math.lcm(*[m.test for m in monkeList])
-    print(value)
-    milestones = [1,20] + [1000*k for k in range(1,11)]
-    res = []
-    #print([m.id for m in monkeList])
-    for iteration in range(10000):
+    monkeList:list[Monke] = [Monke(x.split('\n')) for x in f.read().split('\n\n')]
+    lcm = math.lcm(*[m.mod for m in monkeList])
+    for round in range(10000):
         for monke in monkeList :
-            for _ in range(len(monke.list)) :
-                monke.look += 1
-                it = monke.list.pop(0)
-                it = monke.applyOperation(it) % value
-                if it % monke.test == 0 :
-                    monkeList[monke.true].list.append(it)
-                else :
-                    monkeList[monke.false].list.append(it)
-        if iteration+1 in milestones :
-            res.append([m.look for m in monkeList])
-
-    l = sorted([m.look for m in monkeList],reverse=True)
-    print(l)
-    print(l[0]*l[1])
-    for r in res :
-        print(r)
+            monke.look[0] += len(monke.list1) if round < 20 else 0
+            monke.look[1] += len(monke.list2)
+            for _ in range(len(monke.list1)) :
+                item = math.floor(monke.op(monke.list1.pop(0))/3) % lcm
+                monkeList[monke.test(item)].list1.append(item)
+            for _ in range(len(monke.list2)) :
+                item = monke.op(monke.list2.pop(0)) % lcm
+                monkeList[monke.test(item)].list2.append(item)
+looks = sorted([m.look[0] for m in monkeList]), sorted([m.look[1] for m in monkeList])
+print(f"monkey business part 1 : {looks[0][-1]*looks[0][-2]}\nMonkey business part 2 : {looks[1][-1]*looks[1][-2]}")
